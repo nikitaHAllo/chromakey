@@ -1,7 +1,3 @@
-// ============================================
-// ШАГ 1: Определяем типы и интерфейсы
-// ============================================
-
 import { BackgroundManager, BackgroundOptions } from './background-manager.js';
 
 interface ChromaKeyConfig {
@@ -19,10 +15,6 @@ interface RGB {
 	b: number;
 }
 
-// ============================================
-// ШАГ 2: Настройки хромакея с типами
-// ============================================
-
 const CHROMA_CONFIG: ChromaKeyConfig = {
 	rMin: 0,
 	rMax: 100,
@@ -31,10 +23,6 @@ const CHROMA_CONFIG: ChromaKeyConfig = {
 	bMin: 0,
 	bMax: 100,
 };
-
-// ============================================
-// ШАГ 3: Класс для управления хромакеем
-// ============================================
 
 class ChromaKeyProcessor {
 	private video: HTMLVideoElement;
@@ -59,10 +47,6 @@ class ChromaKeyProcessor {
 		console.log('🎯 ChromaKeyProcessor инициализирован');
 	}
 
-	// ============================================
-	// ШАГ 4: Загрузка фонового изображения
-	// ============================================
-
 	public loadBackgroundFile(file: File): Promise<void> {
 		return this.backgroundManager.loadFromFile(file);
 	}
@@ -71,18 +55,10 @@ class ChromaKeyProcessor {
 		return this.backgroundManager.loadFromUrl(url);
 	}
 
-	// ============================================
-	// ШАГ 5: Рисование фона
-	// ============================================
-
 	private drawBackground(): void {
 		const { width, height } = this.canvas;
 		this.backgroundManager.draw(this.ctx, width, height);
 	}
-
-	// ============================================
-	// ШАГ 6: Проверка цвета на зелёный
-	// ============================================
 
 	private isGreenPixel(r: number, g: number, b: number): boolean {
 		const { rMin, rMax, gMin, gMax, bMin, bMax } = this.config;
@@ -91,24 +67,16 @@ class ChromaKeyProcessor {
 		);
 	}
 
-	// ============================================
-	// ШАГ 7: Основная функция хромакея
-	// ============================================
-
 	public applyChromaKey(): void {
-		// 7.1: Проверяем, что видео готово
 		if (this.video.readyState !== this.video.HAVE_ENOUGH_DATA) {
 			console.warn('⚠️ Видео ещё не загружено');
 			return;
 		}
 
-		// 7.2: Рисуем фон
 		this.drawBackground();
 
-		// 7.3: Рисуем видео поверх фона
 		this.ctx.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
 
-		// 7.4: Получаем пиксельные данные
 		const imageData = this.ctx.getImageData(
 			0,
 			0,
@@ -117,25 +85,18 @@ class ChromaKeyProcessor {
 		);
 		const data = imageData.data;
 
-		// 7.5: Проходим по всем пикселям
 		for (let i = 0; i < data.length; i += 4) {
 			const r = data[i];
 			const g = data[i + 1];
 			const b = data[i + 2];
 
-			// 7.6: Если пиксель зелёный - делаем прозрачным
 			if (this.isGreenPixel(r, g, b)) {
-				data[i + 3] = 0; // Alpha = 0 (прозрачный)
+				data[i + 3] = 0;
 			}
 		}
 
-		// 7.7: Применяем изменения
 		this.ctx.putImageData(imageData, 0, 0);
 	}
-
-	// ============================================
-	// ШАГ 8: Улучшенная версия с плавностью
-	// ============================================
 
 	public applyChromaKeySmooth(): void {
 		if (this.video.readyState !== this.video.HAVE_ENOUGH_DATA) {
@@ -156,10 +117,8 @@ class ChromaKeyProcessor {
 		for (let i = 0; i < data.length; i += 4) {
 			const g = data[i + 1];
 
-			// Вычисляем "зеленость" пикселя (0-1)
 			const greenScore = Math.max(0, Math.min(1, (g - 100) / 155));
 
-			// Плавная прозрачность
 			if (greenScore > 0.3) {
 				data[i + 3] = Math.floor(255 * (1 - greenScore));
 			}
@@ -167,10 +126,6 @@ class ChromaKeyProcessor {
 
 		this.ctx.putImageData(imageData, 0, 0);
 	}
-
-	// ============================================
-	// ШАГ 9: Автоматический режим
-	// ============================================
 
 	public startAutoMode(useSmooth: boolean = false): void {
 		if (this.isAutoMode) {
@@ -205,10 +160,6 @@ class ChromaKeyProcessor {
 		}
 	}
 
-	// ============================================
-	// ШАГ 10: Управление камерой
-	// ============================================
-
 	public async startCamera(
 		width: number = 640,
 		height: number = 480,
@@ -242,10 +193,6 @@ class ChromaKeyProcessor {
 		console.log('⏹ Камера остановлена');
 	}
 
-	// ============================================
-	// ШАГ 11: Обновление настроек
-	// ============================================
-
 	public updateConfig(newConfig: Partial<ChromaKeyConfig>): void {
 		this.config = { ...this.config, ...newConfig };
 		console.log('✅ Настройки обновлены:', this.config);
@@ -254,10 +201,6 @@ class ChromaKeyProcessor {
 	public getConfig(): ChromaKeyConfig {
 		return { ...this.config };
 	}
-
-	// ============================================
-	// НОВЫЕ МЕТОДЫ ДЛЯ РАБОТЫ С ФОНОМ
-	// ============================================
 
 	public setBackgroundOptions(options: BackgroundOptions): void {
 		this.backgroundManager.setOptions(options);
@@ -280,10 +223,6 @@ class ChromaKeyProcessor {
 	}
 }
 
-// ============================================
-// ШАГ 12: Инициализация приложения
-// ============================================
-
 class App {
 	private processor: ChromaKeyProcessor;
 	private startBtn: HTMLButtonElement;
@@ -296,7 +235,6 @@ class App {
 	private applyUrlBtn: HTMLButtonElement;
 
 	constructor() {
-		// Получаем элементы
 		const video = document.getElementById('webcam') as HTMLVideoElement;
 		const canvas = document.getElementById('output') as HTMLCanvasElement;
 
@@ -304,10 +242,8 @@ class App {
 			throw new Error('Не найдены элементы video или canvas');
 		}
 
-		// Создаём процессор
 		this.processor = new ChromaKeyProcessor(video, canvas);
 
-		// Получаем кнопки
 		this.startBtn = document.getElementById('startBtn') as HTMLButtonElement;
 		this.captureBtn = document.getElementById(
 			'captureBtn',
@@ -321,7 +257,6 @@ class App {
 			'applyUrlBtn',
 		) as HTMLButtonElement;
 
-		// Проверяем, что все кнопки найдены
 		if (
 			!this.startBtn ||
 			!this.captureBtn ||
@@ -335,10 +270,8 @@ class App {
 			throw new Error('Не найдены все элементы управления');
 		}
 
-		// Навешиваем обработчики
 		this.setupEventListeners();
 
-		// Загружаем фон (опционально)
 		this.loadBackground();
 
 		console.log('✅ Приложение инициализировано');
@@ -357,7 +290,6 @@ class App {
 			this.handleUrlBackground(),
 		);
 
-		// Горячие клавиши
 		document.addEventListener('keydown', (e: KeyboardEvent) => {
 			if (e.key === 'Enter') {
 				this.handleCapture();
@@ -371,8 +303,6 @@ class App {
 
 	private async loadBackground(): Promise<void> {
 		try {
-			// Можно загрузить свою картинку
-			// await this.processor.loadBackgroundImage('background.jpg');
 			console.log('ℹ️ Используется градиентный фон');
 		} catch (error) {
 			console.warn('⚠️ Не удалось загрузить фон:', error);
@@ -468,10 +398,6 @@ class App {
 	}
 }
 
-// ============================================
-// ШАГ 13: Запуск приложения
-// ============================================
-
 document.addEventListener('DOMContentLoaded', () => {
 	try {
 		new App();
@@ -485,10 +411,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		alert('Ошибка при запуске приложения. Проверьте консоль.');
 	}
 });
-
-// ============================================
-// ШАГ 14: Экспорты
-// ============================================
 
 export { ChromaKeyProcessor, App, CHROMA_CONFIG };
 export type { ChromaKeyConfig, RGB };

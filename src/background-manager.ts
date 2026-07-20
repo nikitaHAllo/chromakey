@@ -1,11 +1,7 @@
-// ============================================
-// BACKGROUND MANAGER - Управление фонами
-// ============================================
-
 export interface BackgroundOptions {
 	fit?: 'cover' | 'contain' | 'stretch'; // Режим отображения
-	blur?: number; // Размытие фона
-	opacity?: number; // Прозрачность
+	blur?: number;
+	opacity?: number;
 }
 
 export class BackgroundManager {
@@ -20,10 +16,6 @@ export class BackgroundManager {
 		this.options = { ...this.options, ...options };
 		console.log('🎨 BackgroundManager инициализирован');
 	}
-
-	// ============================================
-	// ЗАГРУЗКА ФОНА
-	// ============================================
 
 	public async loadFromFile(file: File): Promise<void> {
 		return new Promise((resolve, reject) => {
@@ -69,17 +61,12 @@ export class BackgroundManager {
 		}
 	}
 
-	// ============================================
-	// РИСОВАНИЕ ФОНА
-	// ============================================
-
 	public draw(
 		ctx: CanvasRenderingContext2D,
 		width: number,
 		height: number,
 	): void {
 		if (!this.image) {
-			// Если фон не загружен, рисуем градиент
 			this.drawGradient(ctx, width, height);
 			return;
 		}
@@ -92,7 +79,6 @@ export class BackgroundManager {
 		// Рисуем изображение
 		this.drawImage(ctx, width, height);
 
-		// Применяем размытие (если нужно)
 		if (this.options.blur && this.options.blur > 0) {
 			this.applyBlur(ctx);
 		}
@@ -110,7 +96,6 @@ export class BackgroundManager {
 		const img = this.image;
 		const fit = this.options.fit || 'cover';
 
-		// Вычисляем размеры и позицию
 		let drawWidth = width;
 		let drawHeight = height;
 		let offsetX = 0;
@@ -150,19 +135,13 @@ export class BackgroundManager {
 	}
 
 	private applyBlur(ctx: CanvasRenderingContext2D): void {
-		// Простое размытие через CSS filter (проще и быстрее)
 		const canvas = ctx.canvas;
 		canvas.style.filter = `blur(${this.options.blur || 0}px)`;
 
-		// Сбрасываем filter после рисования
 		setTimeout(() => {
 			canvas.style.filter = 'none';
 		}, 100);
 	}
-
-	// ============================================
-	// УПРАВЛЕНИЕ НАСТРОЙКАМИ
-	// ============================================
 
 	public setOptions(options: BackgroundOptions): void {
 		this.options = { ...this.options, ...options };
@@ -185,10 +164,6 @@ export class BackgroundManager {
 		this.image = null;
 		console.log('🗑️ Фон очищен');
 	}
-
-	// ============================================
-	// ДОПОЛНИТЕЛЬНЫЕ ФУНКЦИИ
-	// ============================================
 
 	public async loadFromClipboard(): Promise<void> {
 		try {
@@ -215,7 +190,6 @@ export class BackgroundManager {
 	}
 
 	public generateTestPattern(): void {
-		// Создаём тестовое изображение (шахматная доска)
 		const canvas = document.createElement('canvas');
 		canvas.width = 640;
 		canvas.height = 480;
