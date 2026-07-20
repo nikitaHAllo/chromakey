@@ -1,0 +1,19 @@
+{
+	"name": "chromakey-ts",
+	"version": "1.0.0",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"build": "tsc",
+		"watch": "tsc --watch",
+		"dev": "npm run build && npx live-server"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"devDependencies": {
+		"@types/node": "^26.1.1",
+		"typescript": "^7.0.2"
+	}
+}

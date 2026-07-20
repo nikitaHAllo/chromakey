@@ -1,0 +1,23 @@
+{
+	"compilerOptions": {
+		"target": "ES2020",
+		"module": "ES2020",
+		"lib": ["ES2020", "DOM", "DOM.Iterable"],
+		"outDir": "./dist",
+		"rootDir": "./", // ← Изменили с "./src" на "./"
+		"strict": true,
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+		"moduleResolution": "bundler",
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noImplicitReturns": true,
+		"noFallthroughCasesInSwitch": true,
+		"removeComments": true
+	},
+	"include": ["src/**/*", "src/script.ts"], // ← Оставляем
+	"exclude": ["node_modules", "dist"]
+}

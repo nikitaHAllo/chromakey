@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="ru">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Хромакей на TypeScript</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				background: #1a1a2e;
+				color: white;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				padding: 20px;
+				margin: 0;
+			}
+
+			h1 {
+				color: #4ecdc4;
+			}
+
+			.container {
+				display: flex;
+				gap: 20px;
+				flex-wrap: wrap;
+				justify-content: center;
+				margin: 20px 0;
+			}
+
+			.video-container {
+				background: #16213e;
+				border-radius: 10px;
+				padding: 10px;
+				border: 2px solid #4ecdc4;
+			}
+
+			video,
+			canvas {
+				width: 640px;
+				height: 480px;
+				display: block;
+				border-radius: 5px;
+				background: #0f0f1a;
+			}
+
+			.controls {
+				display: flex;
+				gap: 10px;
+				flex-wrap: wrap;
+				justify-content: center;
+				margin: 20px 0;
+			}
+
+			.bg-input-area {
+				display: flex;
+				gap: 10px;
+				align-items: center;
+				margin: 10px 0;
+				flex-wrap: wrap;
+				justify-content: center;
+			}
+
+			.bg-input-area input[type='text'] {
+				padding: 10px;
+				border-radius: 8px;
+				background: #16213e;
+				color: white;
+				border: 1px solid #4ecdc4;
+				width: 400px;
+				font-size: 14px;
+			}
+
+			.bg-input-area input[type='text']::placeholder {
+				color: #666;
+			}
+
+			button {
+				background: #4ecdc4;
+				color: #1a1a2e;
+				border: none;
+				padding: 12px 25px;
+				font-size: 16px;
+				border-radius: 8px;
+				cursor: pointer;
+				font-weight: bold;
+				transition: all 0.3s;
+				min-width: 150px;
+			}
+
+			button:hover:not(:disabled) {
+				transform: scale(1.05);
+				box-shadow: 0 0 20px rgba(78, 205, 196, 0.3);
+			}
+
+			button:disabled {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+
+			.info {
+				background: #16213e;
+				padding: 15px;
+				border-radius: 8px;
+				margin: 10px 0;
+				max-width: 600px;
+				text-align: center;
+			}
+
+			.info code {
+				background: #0f0f1a;
+				padding: 2px 8px;
+				border-radius: 4px;
+				color: #4ecdc4;
+			}
+
+			.status {
+				color: #ffd93d;
+				font-size: 14px;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>🎥 Хромакей на TypeScript</h1>
+
+		<div class="container">
+			<div class="video-container">
+				<p style="text-align: center">📹 Исходное видео</p>
+				<video id="webcam" autoplay playsinline></video>
+			</div>
+
+			<div class="video-container">
+				<p style="text-align: center">✨ Результат с хромакеем</p>
+				<canvas id="output" width="640" height="480"></canvas>
+			</div>
+		</div>
+
+		<div class="controls">
+			<button id="startBtn">▶ Запустить камеру</button>
+			<button id="captureBtn">🔄 Применить эффект</button>
+			<button id="autoBtn">⚡ Авто-режим</button>
+			<button id="smoothBtn">✨ Сглаживание</button>
+			<button id="bgBtn">🖼️ Загрузить фон</button>
+			<input type="file" id="bgInput" accept="image/*" style="display: none" />
+		</div>
+
+		<!-- 👇 ЭТОТ БЛОК ДОБАВИТЬ! -->
+		<div class="bg-input-area">
+			<input
+				type="text"
+				id="bgUrlInput"
+				placeholder="🌐 Или вставьте URL картинки..."
+			/>
+			<button id="applyUrlBtn" style="min-width: 100px">Загрузить</button>
+		</div>
+
+		<div class="info">
+			<p>📖 <strong>Управление:</strong></p>
+			<p>
+				<code>ENTER</code> - применить эффект &nbsp;|&nbsp;
+				<code>ПРОБЕЛ</code> - авто-режим
+			</p>
+			<p class="status" id="status">⏳ Ожидание запуска...</p>
+		</div>
+
+		<script type="module" src="dist/script.js"></script>
+	</body>
+</html>
